@@ -29,7 +29,7 @@
       var theThing = null;
       var replaceThing = function () {
         var priorThing = theThing;  // hold on to the prior thing
-        var unused = function () {  // this is what causes the leak
+        var unused = function () {  // <= this is what causes the leak
           // 'unused' is the only place where 'priorThing' is referenced,
           // but 'unused' never gets invoked
           if (priorThing) {
