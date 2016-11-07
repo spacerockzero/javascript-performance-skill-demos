@@ -29,7 +29,7 @@
       var theThing = null;
       var replaceThing = function () {
         var priorThing = theThing;  // hold on to the prior thing
-        var unused = function () {
+        var unused = function () {  // this is what causes the leak
           // 'unused' is the only place where 'priorThing' is referenced,
           // but 'unused' never gets invoked
           if (priorThing) {
@@ -44,8 +44,13 @@
         };
         return theThing;
       };
-      // setInterval(replaceThing, 500);    // invoke `replaceThing' once every 50ms
-      console.log(replaceThing().someMethod());
+      // setInterval(replaceThing, 50);    // invoke `replaceThing' once every 50ms
+      // console.log(replaceThing().someMethod());
+      for(var i=0; i<1000; i++) {
+        replaceThing();
+      }
+
+      // TODO: Try difference in memory gc between Map and WeakMap next time
 
     </script>
   </body>
