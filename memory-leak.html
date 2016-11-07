@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>memory leak</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+      // badGlobal = '';
+      // var inc = 0
+      // // up to 1,000,000
+      // while(inc <= 1000000) {
+      //   badGlobal += 'abc';
+      //   // badGlobal += Math.random() + '';
+      //   inc++;
+      // }
+      //
+      // console.log(badGlobal, '  i\'m a badGlobal');
+      //
+      // var thing = function theThing() {
+      //   return new Array(1000000).join('abc');
+      // }
+      //
+      // console.log(thing(), '  is thing');
+      // Memory Leak this causes looks like in the image:
+      // memory-leak.png
+      // oh, and it crashes the browser too
+      var theThing = null;
+      var replaceThing = function () {
+        var priorThing = theThing;  // hold on to the prior thing
+        var unused = function () {
+          // 'unused' is the only place where 'priorThing' is referenced,
+          // but 'unused' never gets invoked
+          if (priorThing) {
+            console.log("hi");
+          }
+        };
+        theThing = {
+          longStr: new Array(1000).join(new Array(100).join('abc')),  // create a 1MB object
+          someMethod: function () {
+            // console.log(theThing.longStr);
+          }
+        };
+        return theThing;
+      };
+      // setInterval(replaceThing, 500);    // invoke `replaceThing' once every 50ms
+      console.log(replaceThing().someMethod());
+
+    </script>
+  </body>
+</html>
